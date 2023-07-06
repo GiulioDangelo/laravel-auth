@@ -8,8 +8,10 @@
     @vite('resources/js/app.js')
 </head>
 <body>
-    @include('admin.includes.nav')
+    {{-- @include('guest.includes.nav') --}}
+
     @yield('contents')
-    @include('admin.includes.footer')
+
+    {{-- @include('guest.includes.footer') --}}
 </body>
 </html>
