@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    public $validation = ([
+        'title' => 'required',
+        'url_image' => 'required',
+        'content' => 'required',
+    ]);
+
     /**
      * Display a listing of the resource.
      *
@@ -27,7 +33,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.posts.create');
     }
 
     /**
@@ -38,7 +44,17 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate($this->validation);
+
+        $data = $request->all();
+
+        $newPost = new Post();
+        $newPost->title = $data['title'];
+        $newPost->url_image = $data['url_image'];
+        $newPost->content = $data['content'];
+        $newPost->save();
+
+        return to_route('admin.posts.show', ['post' => $newPost]);
     }
 
     /**
@@ -60,7 +76,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('admin.posts.edit', compact('post'));
     }
 
     /**
@@ -72,7 +88,16 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $request->validate($this->validation);
+
+        $data = $request->all();
+        
+        $post->title = $data['title'];
+        $post->url_image = $data['url_image'];
+        $post->content = $data['content'];
+        $post->update();
+
+        return to_route('admin.posts.show', ['post' => $post]);
     }
 
     /**
@@ -83,6 +108,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+
+        return redirect()->route('admin.posts.index')->with('delete_success', $post);
     }
 }
